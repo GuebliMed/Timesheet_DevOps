@@ -1,16 +1,12 @@
 pipeline{
-	environment{
-		registry = "moneimhamadi/devops_project"
-		registryCredential= 'dockerHub'
-		dockerImage = ''
-	}
+	
 	agent any 
 	stages{
 		stage ('Checkout GIT'){
 			steps{
 				echo 'Pulling...';
-					git branch: 'Moneim_Branch',
-					url : 'https://github.com/moneimhamadi/Timesheet_DevOps';
+					git branch: 'master',
+					url : 'https://github.com/GuebliMed/Timesheet_DevOps.git';
 			}
 		}
 
@@ -51,17 +47,7 @@ pipeline{
 			}
 		}
 
-		stage('Building our image') {
-			steps { script { dockerImage= docker.build registry + ":$BUILD_NUMBER" } }
-		}
-
-		stage('Deploy our image') {
-			steps { script { docker.withRegistry( '', registryCredential) { dockerImage.push() } } }
-			}
-
-		stage('Cleaning up') {
-			steps { bat "docker rmi $registry:$BUILD_NUMBER" }
-		}
+		
 
 		
 
@@ -70,10 +56,10 @@ pipeline{
 
 	post{
 		success{
-			emailext body: 'Build success', subject: 'Jenkins', to:'hammadi.moneim@esprit.tn'
+			emailext body: 'Build success', subject: 'Jenkins', to:'mohamed.guebli1@esprit.tn'
 		}
 		failure{
-			emailext body: 'Build failure', subject: 'Jenkins', to:'hammadi.moneim@esprit.tn'
+			emailext body: 'Build failure', subject: 'Jenkins', to:'mohamed.guebli1@esprit.tn'
 		}
 
 	}
